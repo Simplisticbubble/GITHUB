@@ -86,6 +86,19 @@ function App() {
       setDivs(newDivs);
       setWL('next');
       setTopDiv([]);
+    }else if(newDivs.size === 0){
+      setWL('win');
+      handleIndex();
+      const newDivs = new Map([
+        [0, Math.floor(Math.random() * 10)],
+        [1, Math.floor(Math.random() * 10)],
+        [2, Math.floor(Math.random() * 10)],
+        [3, Math.floor(Math.random() * 10)],
+      ]);
+      console.log(newDivs);
+      setDivs(newDivs);
+      setWL('next');
+      setTopDiv([]);
     }
   };
 
@@ -104,24 +117,45 @@ function App() {
         <button onClick={() => handleOperatorClick('*')}>*</button>
         <button onClick={() => handleOperatorClick('/')}>/</button>
       </div>
-
+      <div className='app__input'>
       {Array.from(divs.entries()).map(([index, value]) => (
-        <div key={index} className="dynamic-div" onClick={() => handleDivClick(index)}>
+        <div key={index} className="input_div" onClick={() => handleDivClick(index)}>
           {value}
         </div>
       ))}
+      </div>
 
       <div className="top-divs">
         <h2>Top Divs</h2>
         <div className="current-operation">{currOp}</div>
+        <div className='output'>
         {topDiv.map((index, i) => (
           <div key={i} className="top-div">
             {index}
           </div>
         ))}
+        </div>
+      </div>
+
+
+
+
+      <div className={`train-container ${WL === 'win' ? 'steam' : ''}`}>
+      <div className="train">
+        <div className="locomotive">
+          <div className="smokestack"></div>
+        </div>
+        <div className="carriage"></div>
       </div>
     </div>
+
+    
+    </div>
+    
+
+
   );
+  
 }
 
 export default App;
