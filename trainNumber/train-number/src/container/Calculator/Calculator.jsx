@@ -1,68 +1,94 @@
-import React, {useState} from "react";
+import React, { useState } from 'react';
+import './Calculator.css'; // You can create a CSS file for styling
 
 const Calculator = () => {
-    const num1 = 7;
-    const num2 = 2;
-    const num3 = 2;
-    const num4 = 1;
-    const [divs, setDivs] = useState([num1, num2, num3, num4]);
-    const [displayValue, setDisplayValue] = useState(''); // State to track the displayed value
-    const [currentValue, setCurrentValue] = useState(''); // State to store the current value for calculation
+  const [divs, setDivs] = useState(new Set([1, 2, 3, 4]));
+  const [topDiv, setTopDiv] = useState([]);
+  const [currOp, setCurrOp] = useState('+');
+  const [WL, setWL] = useState('');
 
-    const [operator, setOperator] = useState(null);// State to store the current value
+  const handleDivClick = (div) => {
+    const newDivs = new Set(divs);
+    newDivs.delete(div);
+    setDivs(newDivs);
 
-    // Function to handle number clicks
-  const handleNumberClick = (number) => {
-    setDisplayValue((prevDisplayValue) => prevDisplayValue + number);
+    setTopDiv((prevTopDiv) => {
+       const updatedTopDiv = [...prevTopDiv, Number(div)];
+       if (updatedTopDiv.length === 2) {
+        console.log("performed Op");
+        performOperation(updatedTopDiv,newDivs);
+       }
+
+       return updatedTopDiv;
+    })
+
   };
 
-    // Function to handle operator clicks
-    const handleOperatorClick = (op) => {
-        setCurrentValue(displayValue);
-        setDisplayValue('');
-        setOperator(op);
-      };
-      const handleClearClick = () => {
-        setDisplayValue('');
-        setCurrentValue('');
-        setOperator(null);
-      };
-      const handleImpossibleClick = () => {
-        setDisplayValue('');
-        setCurrentValue('');
-        setOperator(null);
-      };
+  const handleOperatorClick = (op) => {
+    setCurrOp(op);
 
-    return (
-        <div className="app__Calculator">
-            <div className="app__Calculator-display">
-                <div className="app__Calculator-digit">
-                    
-                </div>
-                <div className="app__Calculator-digit">
-                    
-                </div>
-                <div className="app__Calculator-digit">
-                    
-                </div>
-                <div className="app__Calculator-digit">
-                    
-                </div>
-            </div>
-{/***************************************************************************************************************************************************** */}
-            <div className="app__Calculator-keypad">
-                <div className="buttons-grid">
-                    <button onClick={() => handleOperatorClick('/')}>/</button>
-                    <button onClick={() => handleOperatorClick('*')}>*</button>
-                    <button onClick={() => handleOperatorClick('-')}>-</button>
-                    <button onClick={() => handleOperatorClick('+')}>+</button>
-                </div>
-                <div className="buttons-grid-special">
-                    <button onClick={handleClearClick}>C</button>
-                    <button onClick={handleImpossibleClick}>Not Possible</button>
-                </div>
-            </div>
+    // If an operator is clicked, perform the operation immediately if two numbers are present
+    if (topDiv.length === 2) {
+      performOperation();
+    }
+  };
+
+  const performOperation = (updatedTopDiv, newDivs) => {
+    const num1 = updatedTopDiv[0];
+    const num2 = updatedTopDiv[1];
+    let result;
+
+    switch (currOp) {
+      case '+':
+        result = num1 + num2;
+        break;
+      case '-':
+        result = num1 - num2;
+        break;
+      case '*':
+        result = num1 * num2;
+        break;
+      case '/':
+        result = num1 / num2;
+        break;
+      default:
+        break;
+    }
+
+    setTopDiv([result]);
+    if(newDivs.size === 0 && result === 10){
+        setWL('win');
+    }
+  };
+
+  return (
+    <div className="dynamic-divs">
+        <div className = 'display-Win'>{WL}</div>
+        <div className="operations">
+        <button onClick={() => handleOperatorClick('+')}>+</button>
+        <button onClick={() => handleOperatorClick('-')}>-</button>
+        <button onClick={() => handleOperatorClick('*')}>*</button>
+        <button onClick={() => handleOperatorClick('/')}>/</button>
+        </div>
+
+      {Array.from(divs).map((div, index) => (
+        <div key={index} className="dynamic-div" onClick={() => handleDivClick(div)}>
+          {div}
+        </div>
+      ))}
+
+      <div className="top-divs">
+        <h2>Top Divs</h2>
+        <div className="current-operation">{currOp}</div>
+        {topDiv.map((div, index) => (
+          <div key={index} className="top-div">
+            {div}
+          </div>
+        ))}
+      </div>
     </div>
-);};
+  );
+};
+
 
 export default Calculator;
