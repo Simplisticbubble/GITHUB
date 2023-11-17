@@ -1,6 +1,6 @@
 
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const stations = ["Leppington", "Edmondson Park", "Glenfield", "Casula", "Liverpool", "Warwick Farm", "Cabramatta", "Canley Vale", "Fairfield", "Yennora", "Guildford", "Merrylands", "Granville", "Clyde", "Auburn", "Lidcombe", "Flemington", "Homebush", "Strathfield", "Burwood", "Redfern", "Central", "Town Hall", "Wynyard", "Circular Quay", "St James", "Museum", "Kings Cross", "Edgecliff", "Bondi Junction"];
 
@@ -74,7 +74,7 @@ function App() {
 
     setTopDiv([result]);
     if (newDivs.size === 0 && result === 10) {
-      setWL('win');
+      setWL('Congratulations!');
       handleIndex();
       const newDivs = new Map([
         [0, Math.floor(Math.random() * 10)],
@@ -84,10 +84,10 @@ function App() {
       ]);
       console.log(newDivs);
       setDivs(newDivs);
-      setWL('next');
+
       setTopDiv([]);
     }else if(newDivs.size === 0){
-      setWL('win');
+      setWL('Nice try ;((');
       handleIndex();
       const newDivs = new Map([
         [0, Math.floor(Math.random() * 10)],
@@ -97,18 +97,20 @@ function App() {
       ]);
       console.log(newDivs);
       setDivs(newDivs);
-      setWL('next');
       setTopDiv([]);
     }
   };
 
   return (
     <div className="dynamic-divs">
+      
       <div className="app__Station">
         <div className="app__Station-container">
           <h1 className="app__Station-name">{stations[Index]}</h1>
+          <p className='app__Station-name'>next stop</p>
         </div>
       </div>
+      
 
       <div className='display-Win'>{WL}</div>
       <div className="operations">
@@ -126,7 +128,7 @@ function App() {
       </div>
 
       <div className="top-divs">
-        <h2>Top Divs</h2>
+        <h2>Current Operator:</h2>
         <div className="current-operation">{currOp}</div>
         <div className='output'>
         {topDiv.map((index, i) => (
@@ -140,16 +142,6 @@ function App() {
 
 
 
-      <div className={`train-container ${WL === 'win' ? 'steam' : ''}`}>
-      <div className="train">
-        <div className="locomotive">
-          <div className="smokestack"></div>
-        </div>
-        <div className="carriage"></div>
-      </div>
-    </div>
-
-    
     </div>
     
 
