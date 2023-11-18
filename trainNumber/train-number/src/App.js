@@ -50,6 +50,66 @@ function App() {
     }
   };
 
+    const calculateExpression = (num1, op1, num2, op2, num3, op3, num4) => {
+      switch (op1) {
+        case '+':
+          return num1 + calculateExpression(num2, op2, num3, op3, num4);
+        case '-':
+          return num1 - calculateExpression(num2, op2, num3, op3, num4);
+        case '*':
+          return num1 * calculateExpression(num2, op2, num3, op3, num4);
+        case '/':
+          return num1 / calculateExpression(num2, op2, num3, op3, num4);
+        default:
+          return num1;
+      }
+    };
+    
+    const generateRandomNumber = () => Math.floor(Math.random() * 10);
+    
+    const handleImpClick = () => {
+      const num1 = divs.get(0);
+      const num2 = divs.get(1);
+      const num3 = divs.get(2);
+      const num4 = divs.get(3);
+    
+      const operators = ['+', '-', '*', '/'];
+      const permutations = [];
+    
+      for (const op1 of operators) {
+        for (const op2 of operators) {
+          for (const op3 of operators) {
+            const result = calculateExpression(num1, op1, num2, op2, num3, op3, num4);
+            permutations.push({ expression: `${num1} ${op1} ${num2} ${op2} ${num3} ${op3} ${num4}`, result });
+          }
+        }
+      }
+    
+      const winningExpression = permutations.find(({ result }) => result === 10);
+    
+      if (winningExpression) {
+        console.log(winningExpression);
+        console.log("Nice try");
+        setWL('Nice try ;((');
+      } else {
+        console.log("Congratulations!");
+        setWL('Congratulations!');
+        handleIndex();
+      }
+    
+      const newDivs = new Map([
+        [0, generateRandomNumber()],
+        [1, generateRandomNumber()],
+        [2, generateRandomNumber()],
+        [3, generateRandomNumber()],
+      ]);
+    
+      console.log(newDivs);
+      setDivs(newDivs);
+      setTopDiv([]);
+    };
+  
+
   const performOperation = (updatedTopDiv, newDivs) => {
     const num1 = updatedTopDiv[0];
     const num2 = updatedTopDiv[1];
@@ -118,6 +178,7 @@ function App() {
         <button onClick={() => handleOperatorClick('-')}>-</button>
         <button onClick={() => handleOperatorClick('*')}>*</button>
         <button onClick={() => handleOperatorClick('/')}>/</button>
+        <button onClick={() => handleImpClick()}>Impossible</button>
       </div>
       <div className='app__input'>
       {Array.from(divs.entries()).map(([index, value]) => (
